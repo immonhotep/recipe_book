@@ -1,0 +1,43 @@
+ {% extends "recipes/base.html" %}
+ {% load static %}
+
+{% block content  %}
+
+<div class="container py-4 text-center">
+<h3>Our most liked recipes</h3>
+<hr>
+
+<div id="carouselExample" class="carousel slide">
+  
+
+  <div class="carousel-inner">
+    {% for recipe in recipes|slice:'0:5' %}
+    <div class="carousel-item text-center text-black mb-3 {% if forloop.first %} active {% endif %}">
+        
+    
+        <a href="{% url 'show_recipe' recipe.pk %}"><img src="{{recipe.imageURL}}" class="rounded-start mb-3"  width="800" height="600"></a>
+        
+
+        <p class="px-3">{{ recipe.name }}&nbsp;&nbsp; <i class="fa-solid fa-heart text-danger"></i> {{recipe.Countlikes}}    </p>
+     
+    </div>    
+    {% endfor %}
+    
+    
+  </div>
+
+  <button class="carousel-control-prev text-black" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon text-black" aria-hidden="true"></span>
+    <span><i class="fa-solid fa-circle-left fa-2x"></i></span>
+  </button>
+  <button class="carousel-control-next text-black" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span><i class="fa-solid fa-circle-right fa-2x"></i></span>
+  </button>
+</div>
+
+</div>
+
+
+
+{% endblock content %}

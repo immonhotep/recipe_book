@@ -1,0 +1,77 @@
+ {% extends "recipes/base.html" %}
+
+ {% block content %}
+
+<div class="d-flex justify-content-center">
+    <div class="col-6">
+
+    <div class="card mb-3">
+       <img src="{{recipe.imageURL}}" class="card-img-top rounded mx-auto d-block" height=400px/>
+      <div class="card-body">
+        
+        <div class="d-flex justify-content-between">
+
+                <span><h5 class="card-title">{{recipe.name}}</h5></span>
+                <span>
+                <figure class="figure">
+                  <a href={% url 'show_profile' recipe.user.pk %}><img src="{{recipe.user.profile.imageURL}}" class="figure-img img-fluid rounded" alt="..." height=30 width=30></a>
+                <figcaption class="figure-caption">{{recipe.user.username}}</figcaption>
+                </figure>
+                
+               
+                
+                
+                
+                </span>
+        </div>
+
+        <div  class="py-4">
+                <u><small>Description:</small></u>
+        </div>
+        
+        <small class="text-muted"><p class="card-text">{{recipe.description | safe}} </p></small> 
+        <div class="d-flex justify-content-between">
+                <span>Time required to make:</span><span>{{recipe.required_time}} Min</span>
+        </div>
+
+        <div class="d-flex justify-content-between">
+        {% if recipe.complexity %}
+          <span>complexity:</span><span>{{recipe.complexity}}</span>
+        {% else %}
+          <span>complexity:</span><span>Not present</span>
+        {% endif %}
+
+        </div>
+        <hr>
+        
+
+        <div class="d-flex justify-content-center">
+
+
+           {% if request.user.is_authenticated %}
+
+                <a href="{% url 'send_comment' recipe.pk %}" class="btn btn-outline-success">Add Comment</a>&nbsp;&nbsp;
+
+                  {% if request.user in recipe.like.all %}
+                 <a href="{% url 'send_like' recipe.pk %}" class="btn btn-outline-danger btn-sm"><i class="fa-solid fa-heart"></i></a>
+                    
+                  {% else %}
+                   <a href="{% url 'send_like' recipe.pk %}" class="btn btn-outline-danger btn-sm"><i class="fa-regular fa-heart"></i></a>                 
+                  {% endif %}
+
+          {% else %}
+
+            <button class="btn btn-outline-secondary btn-sm" disabled><i class="fa-solid fa-heart"></i></button>
+
+          {% endif %}
+
+          &nbsp;&nbsp;{{recipe.Countlikes}}
+          
+
+        </div>
+             
+      </div>
+
+</div>
+
+ {% endblock content%}

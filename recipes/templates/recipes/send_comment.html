@@ -1,0 +1,193 @@
+ {% extends "recipes/base.html" %}
+ {% load static %}
+
+{% block content  %}
+
+<div class="rounded-top text-white d-flex flex-row py-4" style="background-color: #000; height:200px;">
+
+            
+
+            <div class="ms-4 mt-5 d-flex flex-column" style="width: 150px;">
+            
+              <img src="{{food_recipe.imageURL}}"
+                alt="Generic placeholder image" class="img-fluid img-thumbnail mt-4 mb-2"
+                style="width: 150px; z-index: 1">
+           
+
+            </div>
+            <div class="ms-3" style="margin-top: 130px;">
+              <figure class="text-center">
+                <blockquote class="blockquote">
+                {% if food_recipe.name %}
+                  <p>{{food_recipe.name}}</p>
+                {% endif %}
+                </blockquote>
+                {% if food_recipe.food_category %}
+                <figcaption class="blockquote-footer">
+                  ({{food_recipe.food_category}})
+                </figcaption>
+                {% endif %}
+              </figure>
+            </div>
+          </div>
+          
+       
+
+</div>
+<div class="row d-flex justify-content-center py-4 mt-4">
+  <div class="col-md-8 col-lg-6">
+    <div class="card shadow-0 border" style="background-color: #f0f2f5;">
+      <div class="card-body p-4">
+      <form method="POST">
+      {% csrf_token%}
+        <div data-mdb-input-init class="form-outline mb-4">
+        
+          <input type="text" name="comment" id="addANote" class="form-control" placeholder="Type comment..." />
+          
+          <div class="d-flex justify-content-between py-4">
+          <span><button class='btn btn-outline-info btn-sm' type="submit">Add note</button></span><span>
+          </form>
+
+          
+      
+          </div>
+         
+
+        </div>
+    
+    </form>
+          <div class="text-center">
+          <i><h6>All comment quantity: {{all_comments|length}}</h6></i>
+          </div>
+        {% for comment in comments%}
+        <div class="card mb-4">
+          <div class="card-body">
+            <p>{{comment.comment}}</p>
+
+            <div class="d-flex justify-content-between">
+              <div class="d-flex flex-row align-items-center">
+                <a href="{% url 'show_profile' comment.user.pk %}"><img src="{{comment.user.profile.imageURL}}"  width="25"
+                  height="25" /></a>
+                <p class="small mb-0 ms-2">{{comment.user.username}} - <i>{{comment.date_added}}</i></p>
+              </div>
+              <div class="d-flex flex-row align-items-center">
+                {% if request.user.is_authenticated %}
+                    {% if  comment.user.id == request.user.id %}
+                  
+                    <a href="" data-bs-toggle="modal" data-bs-target="#update-item-modal-{{comment.pk}}"><i class="fa-solid fa-pencil mx-2 fa-xs text-body" style="margin-top: -0.16rem;"></i></a>
+                     
+                    
+                    {% endif %}
+                    {% if  comment.user.id == request.user.id or request.user.is_superuser %}
+                    <a href="" data-bs-toggle="modal" data-bs-target="#delete-item-modal-{{comment.pk}}"><i class="fa-solid fa-trash mx-2 fa-xs text-body" style="margin-top: -0.16rem;"></i></a>
+                    
+                      <!--modal delete -->
+
+
+                      <div class="modal" id="delete-item-modal-{{comment.pk}}">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+
+                              <div class="modal-header">
+                                <h4 class="modal-title">Delete Confirmation</h4>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                              </div>
+                              <form method="POST" action="{% url 'delete_comment' comment.pk %}">
+                              {% csrf_token %}
+                              <div class="modal-body">
+                              Are you sure want to delete comment: {{comment.pk}}
+                              </div>                            
+                              <div class="modal-footer">
+                                <a  class="btn btn-warning" data-bs-dismiss="modal">cancel</a>
+                                <button type="submit" class="btn btn-danger"  data-bs-dismiss="modal">delete</button>
+                              </div>
+                              </form>
+
+                            </div>
+                          </div>
+                        </div>
+
+
+                      <!---modify modal -->
+
+
+                       <div class="modal" id="update-item-modal-{{comment.pk}}">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+
+                              <div class="modal-header">
+                                <h4 class="modal-title">Update Comment</h4>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                              </div>
+                              <form method="POST" action="{% url 'modify_comment' comment.pk %}?food={{food_recipe.pk}}">
+                              {% csrf_token %}
+                              <div class="modal-body">
+                              update your comment: {{comment.pk}}
+
+                              <input type="text"  name="updated_message" value="{{comment.comment}}" class="form-control" placeholder="{{comment.comment}}" required>
+                              </div>                            
+                              <div class="modal-footer">
+                                <a  class="btn btn-warning" data-bs-dismiss="modal">cancel</a>
+                                <button type="submit" class="btn btn-danger">update</button>
+                              </div>
+                              </form>
+
+                            </div>
+                          </div>
+                        </div>
+
+
+                    {% endif %}
+
+                  {% if  request.user in comment.likes.all %}
+                  <a href="{% url 'comment_like'  comment.pk %}"><i class="far fa-thumbs-down mx-2 fa-xs text-body" style="margin-top: -0.16rem;"></i></a>
+                  {% else %}
+                  <a href="{% url 'comment_like'  comment.pk %}"><i class="far fa-thumbs-up mx-2 fa-xs text-body" style="margin-top: -0.16rem;"></i></a>
+                  {% endif %}
+
+                <p class="small text-muted mb-0">{{comment.CountCommentLikes}}</p>
+
+
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+     
+     
+
+        
+
+            <div class="container my-4">
+            <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                {% if comments.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{comments.previous_page_number}}">Previous</a></li>
+                {% endif%}
+                {% for page  in comments.paginator.page_range %}
+                <li class="page-item"><a class="page-link" href="?page={{page}}">{{page}}</a></li>
+                {% endfor %}
+                {% if comments.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{comments.next_page_number}}">Next</a></li>
+                {% endif %}
+            </ul>
+            </nav>
+            </div>
+
+
+
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+{% endblock content  %}

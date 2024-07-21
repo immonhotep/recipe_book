@@ -1,0 +1,54 @@
+ {% extends "recipes/base.html" %}
+
+ {% block content %}
+
+<div class="rounded-top text-white d-flex flex-row py-4" style="background-color: #000; height:200px;">
+            <div class="ms-4 mt-5 d-flex flex-column" style="width: 150px;">
+           
+              <img src="{{form.instance.imageURL}}"
+                 class="img-fluid img-thumbnail mt-4 mb-2"
+                style="width: 150px; z-index: 1">
+           
+
+            </div>
+            <div class="ms-3" style="margin-top: 130px;">
+              <figure class="text-center">
+                <blockquote class="blockquote">
+                {% if form.instance.name %}
+                  <p>{{form.instance.name}}</p>
+                {% endif %}
+                </blockquote>
+                {% if form.instance.food_category %}
+                <figcaption class="blockquote-footer">
+                  ({{form.instance.food_category}})
+                </figcaption>
+                {% endif %}
+              </figure>
+            </div>
+          </div>
+
+<div class="card py-4">
+ {% if add %}
+ <i><h3 class="text-center">Add new food recipe</h3></i>
+ {% else %}
+  <i><h3 class="text-center">Modify food recipe</h3></i>
+ {% endif %}
+ <hr>
+
+ <form method="POST" enctype="multipart/form-data">
+ {% csrf_token %}
+
+    {{form|safe}}
+    {{form.media}}
+    <div class="col-12">
+        <div class="d-grid">
+
+                <button class="btn btn-lg btn-primary" type="submit">{% if add %}Add recipe{% else%} Modify recipe{% endif%}</button>
+        </div>
+    </div>
+
+ </form>
+
+</div>
+</div>
+ {% endblock content %}

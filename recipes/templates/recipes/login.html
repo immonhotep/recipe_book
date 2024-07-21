@@ -1,0 +1,46 @@
+ {% extends "recipes/base.html" %}
+
+ {% block content %}
+
+<section class="vh-100">
+  <div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+        <div class="card shadow-2-strong" style="border-radius: 1rem;">
+          <div class="card-body p-5 text-center">
+
+            <form method="POST">
+            {% csrf_token %}
+            <div class="col-12" >
+              <div class="mb-5">
+                <h2 class="h3">login</h2>
+                <h3 class="fs-6 fw-normal text-secondary m-0">Enter Your Credentials to Login</h3>
+              </div>
+            </div>
+
+            <div data-mdb-input-init class="form-outline mb-4">
+              <input type="text" name="username" class="form-control form-control-lg" />
+              <label class="form-label">Username</label>
+            </div>
+
+            <div data-mdb-input-init class="form-outline mb-4">
+              <input type="password" name="password"  class="form-control form-control-lg" />
+              <label class="form-label">Password</label>
+            </div>
+
+          <div class="col-12">
+                <div class="d-grid">
+                        <button data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-lg btn-block" type="submit">Login</button>
+                </div>
+            </div>
+            <hr class="my-4">
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock content %}

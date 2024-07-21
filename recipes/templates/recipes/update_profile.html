@@ -1,0 +1,58 @@
+{% extends "recipes/base.html" %}
+
+{% block content %}
+
+
+<div class="card" style="width: 100%;">
+
+     <div class="rounded-top text-white d-flex flex-row mb-4" style="background-color: #000; height:200px;">
+            <div class="ms-4 mt-5 d-flex flex-column" style="width: 150px;">
+              <img src="{{request.user.profile.imageURL}}"
+                 class="img-fluid img-thumbnail mt-4 mb-2"
+                style="width: 150px; z-index: 1">
+            </div>
+            <div class="ms-3" style="margin-top: 130px;">
+              <h5>{{request.user.first_name}} {{request.user.last_name}}</h5>
+            </div>
+          </div>
+
+
+
+
+
+  <form method="POST" enctype="multipart/form-data">
+  {% csrf_token %}
+  <div class="card-body">
+    <h5 class="card-title text-center">Update Your Profile Information</h5>
+    <hr>
+    <p class="card-text">{{user_form}}</p>
+    <hr>
+    <hr> 
+    <p class="card-text">{{profile_form}}</p>
+    <div class="col-12">
+        <div class="d-grid">
+                <button class="btn btn-lg btn-primary" type="submit">Update</button>
+        </div>
+    </div>
+    </form>
+  </div>
+</div>
+
+
+<div class="container my-4">
+<nav aria-label="Page navigation example">
+  <ul class="pagination">
+    {% if recipes.has_previous %}
+    <li class="page-item"><a class="page-link" href="?page={{recipes.previous_page_number}}">Previous</a></li>
+    {% endif%}
+    {% for page  in recipes.paginator.page_range %}
+    <li class="page-item"><a class="page-link" href="?page={{page}}">{{page}}</a></li>
+    {% endfor %}
+    {% if recipes.has_next %}
+    <li class="page-item"><a class="page-link" href="?page={{recipes.next_page_number}}">Next</a></li>
+    {% endif %}
+  </ul>
+</nav>
+</div>
+
+{% endblock content %}

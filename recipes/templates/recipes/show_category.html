@@ -1,0 +1,62 @@
+ {% extends "recipes/base.html" %}
+
+ {% block content %}
+
+
+<div class="card mb-3 py-0" style="max-width: 100%;">
+  <div class="row g-0">
+    <div class="col-md-4">
+      <img src="{{category.imageURL}}" class="img-fluid rounded-start">
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title">{{category.name |safe}}</h5>
+        <p class="card-text">{{category.description |safe}}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+ 
+<!---CAROUSEL-->
+
+<div class="container py-4 text-center">
+<div class="d-flex justify-content-center total font-weight-bold mt-4">
+      <span><h5><i>Total quantity of {{category.name}} uploaded: {{recipes.count}} </h5></i></span>
+</div>
+
+<hr>
+
+<div id="carouselExample" class="carousel slide">
+  
+
+  <div class="carousel-inner">
+    {% for recipe in recipes%}
+    <div class="carousel-item text-center text-black mb-3 {% if forloop.first %} active {% endif %}">
+        
+    
+        <a href="{% url 'show_recipe' recipe.pk %}"><img src="{{recipe.imageURL}}" class="rounded-start mb-3"  width="300" height="300"></a>
+        <p class="px-3">{{ recipe.name }}</p>
+     
+    </div>
+    
+    {% endfor %}
+    
+    
+  </div>
+
+  <button class="carousel-control-prev text-black" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon text-black" aria-hidden="true"></span>
+    <span><i class="fa-solid fa-circle-left fa-2x"></i></span>
+  </button>
+  <button class="carousel-control-next text-black" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span><i class="fa-solid fa-circle-right fa-2x"></i></span>
+  </button>
+</div>
+
+</div>
+
+
+
+ {% endblock content %}

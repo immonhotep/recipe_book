@@ -1,0 +1,179 @@
+{% extends "recipes/base.html" %}
+
+{% block content%}
+<section class="h-100 gradient-custom-2">
+  <div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center">
+      <div class="col col-lg-9 col-xl-8">
+        <div class="card">
+        
+          <div class="rounded-top text-white d-flex flex-row" style="background-color: #000; height:200px;">
+            <div class="ms-4 mt-5 d-flex flex-column" style="width: 150px;">
+            
+              <img src="{{profile.imageURL}}"
+                 class="img-fluid img-thumbnail mt-4 mb-2"             
+                style="width: 150px; z-index: 1">
+            
+
+              {% if profile.user.id == request.user.id %}
+              
+              <a href='{% url 'update_profile' %}'  data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-secondary text-body" data-mdb-ripple-color="dark" style="z-index: 1;">
+                Edit profile
+              </a>         
+              
+              {% endif %}
+            </div>
+            <div class="ms-3" style="margin-top: 130px;">
+              <figure class="text-center">
+                <blockquote class="blockquote">
+                  <p>{{profile.user.first_name}} {{profile.user.last_name}}</p>
+                </blockquote>
+                <figcaption class="blockquote-footer">
+                  ({{profile.user.username}})
+                </figcaption>
+              </figure>
+            </div>
+          </div>
+          <div class="p-4 text-black bg-body-tertiary">
+            <div class="d-flex justify-content-end text-center py-1 text-body">
+              <div>
+                <p class="mb-1 h5">{{all_recipes|length}}</p>
+                <p class="small text-muted mb-0">Recipes</p>
+              </div>
+            </div>
+          </div>
+          <div class="card-body p-4 text-black">
+            <div class="mb-5  text-body">
+              <!--<p class="lead fw-normal mb-4 mt-4">About</p>-->
+              <div class="p-4 bg-body-tertiary">
+              {% if profile.profile_bio %}
+                <small><i><p>{{profile.profile_bio}}</p></i></small>
+              {% else %}
+                <small><i><p>{{profile.user.username}} has no bio currently</p></i></small>
+              {% endif %}
+              </div>
+              {% if profile.user.pk == request.user.pk  %}
+              <a href='{% url 'change_user_password' %}' class="btn btn-outline-secondary btn-sm text-body col-md-12 text-right">
+                change password
+              </a>
+              {% endif %}
+
+            </div>
+            <div class="d-flex justify-content-between align-items-center mb-4 text-body">
+              <p class="lead fw-normal mb-0">Recent Food Recipes</p>
+              <p class="mb-0"><a href="{% url 'user_recipes' profile.user.pk %}" class="text-muted">Show all</a></p>
+            </div>
+
+
+
+
+            {% if recipes%}
+            <div class="row">
+              {% for recipe in recipes %}
+                <div class="col-lg-4 mb-4">
+                
+                
+                  
+                  <a href={%  url 'show_recipe' recipe.pk %}><img src="{{recipe.imageURL}}" 
+                    class="w-100 h-75 rounded-3"></a>
+                  
+                  <div class="card-body">
+                    <h5 class="card-title"></h5>
+                    <p class="card-text"></p>
+                    
+                  </div>
+                  {% if recipe.user.id == request.user.id %}
+                  <a href="{% url 'update_recipe' recipe.pk %}" class="btn  btn-info">
+                  <i class="fa-regular fa-pen-to-square"></i>
+                  </a>
+
+                  <a href="" class="btn  btn-danger" data-bs-toggle="modal" data-bs-target="#delete-item-modal-{{recipe.pk}}" >
+                  <i class="fa-regular fa-trash-can"></i>
+                  </a>
+
+
+                 <!--modal delete -->
+
+
+                <div class="modal" id="delete-item-modal-{{recipe.pk}}">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+
+                    <div class="modal-header">
+                      <h4 class="modal-title">Delete Confirmation</h4>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <div class="modal-body">
+                    Are you sure want to delete recipe: {{recipe.name}}
+                    </div>
+                    <form method="POST" action="{% url 'delete_recipe' recipe.pk %}">
+                    {% csrf_token %}
+                    <div class="modal-footer">
+                      <a  class="btn btn-warning" data-bs-dismiss="modal">cancel</a>
+                      <button type="submit" class="btn btn-danger"  data-bs-dismiss="modal">delete</button>
+                    </div>
+                    </form>
+
+                  </div>
+                </div>
+              </div>
+
+
+
+
+               
+
+                  {% endif %}
+               
+                
+              </div>
+
+              
+                         
+              {% endfor  %}
+          </div>
+          {% else %}
+            <small><i><p>{{profile.user.username}} has no recipes yet</p></i></small>
+          {% endif %}
+
+
+        
+
+
+
+
+
+
+        <!--paginator-->
+
+
+            <div class="container my-4">
+              <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                  {% if recipes.has_previous %}
+                  <li class="page-item"><a class="page-link" href="?page={{recipes.previous_page_number}}">Previous</a></li>
+                  {% endif%}
+                  {% for page  in recipes.paginator.page_range %}
+                  <li class="page-item"><a class="page-link" href="?page={{page}}">{{page}}</a></li>
+                  {% endfor %}
+                  {% if recipes.has_next %}
+                  <li class="page-item"><a class="page-link" href="?page={{recipes.next_page_number}}">Next</a></li>
+                  {% endif %}
+                </ul>
+              </nav>
+            </div>
+
+
+
+
+        <!--end paginator -->
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+{% endblock content %}
