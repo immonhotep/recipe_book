@@ -156,13 +156,6 @@ def user_login(request):
         username = request.POST['username']
         password = request.POST['password']
 
-        account = User.objects.get(username=username)
-
-        if not account.is_active:
-            messages.error(request,'Your account inactive, make contact with site administrators')
-            return redirect('user_login')
-
-
         user_login = authenticate(username=username,password=password)
 
         if user_login is not None:
